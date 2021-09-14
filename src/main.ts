@@ -1,9 +1,25 @@
 import "./style.css";
 import broadcast from "./broadcastChannel";
 
-const app = document.querySelector<HTMLDivElement>("#app")!;
+const isSupportBroadcastChannelEl = document.querySelector<HTMLSpanElement>(
+	"#support-broadcast-channel"
+)!;
 
-app.innerHTML = `
-  <h1>Hello Vite!</h1>
-  <a href="https://vitejs.dev/guide/features.html" target="_blank">Documentation</a>
-`;
+const topic = "broadcast/test";
+
+const inputEl = document.querySelector<HTMLInputElement>("#text-input");
+
+isSupportBroadcastChannelEl.innerHTML = `BroadcastChannel을 ${
+	broadcast.isSupport() ? "지원합니다." : "지원하지 않습니다."
+}`;
+
+if (broadcast.isSupport()) {
+	broadcast.subscribe(topic);
+} else {
+	inputEl?.setAttribute("disabled", "");
+}
+
+inputEl.oninput = function () {
+	broadcast.send(topic, inputEl?.value);
+	console.log(inputEl?.value);
+};
