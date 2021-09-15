@@ -34,11 +34,11 @@ class Client {
 		this._emitter.emit(`${eventName}`, payload);
 	}
 
-	on(eventName: string, listener: EventListener) {
+	on<P>(eventName: string, listener: EventListener<P>) {
 		this._emitter.on(eventName, listener);
 	}
 
-	once(eventName: string, listener: EventListener) {
+	once<P>(eventName: string, listener: EventListener<P>) {
 		this._emitter.once(eventName, listener);
 	}
 
@@ -75,3 +75,10 @@ class Client {
 const broadCastChannel = new Client();
 
 export default broadCastChannel;
+
+export type EventPayload<T> = {
+	eventName: string;
+	payload: T;
+};
+
+type EventListener<T = any> = (v: T) => void;
